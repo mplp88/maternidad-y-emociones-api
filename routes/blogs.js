@@ -1,24 +1,60 @@
-import express from 'express'
-//import { verifyToken } from '../middleware/authMiddleware.js'
+import express from "express";
+import { verifyToken } from "../middleware/authMiddleware.js";
+import { Blog } from "../models/blog.js";
 
-const router = express.Router()
+const router = express.Router();
 
-// Datos de prueba
-const blogs = [
-  { _id: '1', title: 'Primer post', summary: 'Resumen del primer post', date: new Date() },
-  { _id: '2', title: 'Segundo post', summary: 'Resumen del segundo post', date: new Date() },
-  { _id: '3', title: 'Tercer post', summary: 'Resumen del tercer post', date: new Date() },
-  { _id: '4', title: 'Cuarto post', summary: 'Resumen del cuarto post', date: new Date() },
-  { _id: '5', title: 'Quinto post', summary: 'Resumen del quinto post', date: new Date() },
-  { _id: '6', title: 'Sexto post', summary: 'Resumen del sexto post', date: new Date() }
-]
+router.get("/", async (req, res) => {
+  const skip = parseInt(req.query.skip) || 0;
+  const limit = parseInt(req.query.limit) || 10;
+  const order = req.query.order || "desc";
+  try {
+    const blogs = await Blog.find()
+      .sort({ createdAt: order === "desc" ? -1 : 1 })
+      .skip(skip)
+      .limit(limit);
+    res.json({ blogs });
+  } catch (error) {
+    console.error("Error fetching blogs:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
-router.get('/', (req, res) => {
-  const skip = parseInt(req.query.skip) || 0
-  const limit = parseInt(req.query.limit) || blogs.length
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const blog = await Blog.findById(id);
+    if (!blog) return res.status(404).json({ error: "Post not found" });
+    res.json({ blog });
+  } catch (error) {
+    console.error("Error fetching blog:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
-  const paginated = blogs.slice(skip, skip + limit)
-  res.json({ blogs: paginated })
-})
+router.post("/", verifyToken, async (req, res) => {
+  const { title, content, author, summary } = req.body;
+  const blog = new Blog({ title, content, author, summary });
+  await blog.save();
+  res.status(201).json(blog);
+});
 
-export default router
+router.put('/:id', verifyToken, async (req, res) => {
+  const { id } = req.params;
+  const { title, content, author, summary } = req.body;
+
+  try {
+    const blog = await Blog.findByIdAndUpdate(
+      id,
+      { title, content, author, summary },
+      { new: true }
+    );
+    if (!blog) return res.status(404).json({ error: "Post not found" });
+    res.json({ blog });
+  } catch (error) {
+    console.error("Error updating blog:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+export default router;
