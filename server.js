@@ -11,6 +11,9 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
+app.get('/', (req, res) => {
+  res.send('API is up')
+})
 app.use('/api/login', authRoutes)
 app.use('/api/blogs', blogRoutes)
 
