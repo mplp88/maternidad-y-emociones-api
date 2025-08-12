@@ -6,6 +6,7 @@ const blogSchema = new Schema({
   summary: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   author: { type: String, required: true },
+  imageUrl: { type: String, required: false },
 });
 
 export const Blog = model("Blog", blogSchema);
