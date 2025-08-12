@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 
 import authRoutes from "../routes/auth.js";
 import blogRoutes from "../routes/blogs.js";
+import imageRoutes from "../routes/image.js";
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
 });
 app.use("/api/login", authRoutes);
 app.use("/api/blogs", blogRoutes);
+app.use("/api/image", imageRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor escuchando en puerto ${PORT}`));

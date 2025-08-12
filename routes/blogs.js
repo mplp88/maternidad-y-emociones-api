@@ -33,26 +33,38 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", verifyToken, async (req, res) => {
-  const { title, content, author, summary } = req.body;
-  const blog = new Blog({ title, content, author, summary });
+  const { title, content, author, summary, imageUrl } = req.body;
+  const blog = new Blog({ title, content, author, summary, imageUrl });
   await blog.save();
   res.status(201).json(blog);
 });
 
 router.put('/:id', verifyToken, async (req, res) => {
   const { id } = req.params;
-  const { title, content, author, summary } = req.body;
+  const { title, content, author, summary, imageUrl } = req.body;
 
   try {
     const blog = await Blog.findByIdAndUpdate(
       id,
-      { title, content, author, summary },
+      { title, content, author, summary, imageUrl },
       { new: true }
     );
     if (!blog) return res.status(404).json({ error: "Post not found" });
     res.json({ blog });
   } catch (error) {
     console.error("Error updating blog:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.delete("/:id", verifyToken, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const blog = await Blog.findByIdAndDelete(id);
+    if (!blog) return res.status(404).json({ error: "Post not found" });
+    res.json({ message: "Post deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting blog:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
