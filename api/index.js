@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import https from "https";
+import fs from "fs";
 
 import authRoutes from "../routes/auth.js";
 import blogRoutes from "../routes/blogs.js";
@@ -29,5 +31,18 @@ app.use("/api/login", authRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/image", imageRoutes);
 
+console.log(process.env.NODE_ENV);
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor escuchando en puerto ${PORT}`));
+if (process.env.NODE_ENV === "development") {
+  const httpsOptions = {
+    key: fs.readFileSync("certs/localhost-key.pem"),
+    cert: fs.readFileSync("certs/localhost.pem"),
+  };
+
+  https.createServer(httpsOptions, app).listen(PORT, () => {
+    console.log(`Servidor HTTPS escuchando en puerto ${PORT}`);
+  });
+} else {
+  app.listen(PORT, () => console.log(`Servidor escuchando en puerto ${PORT}`));
+}
