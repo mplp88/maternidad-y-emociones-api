@@ -20,10 +20,10 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
-  const { id } = req.params;
+router.get("/:slug", async (req, res) => {
+  const { slug } = req.params;
   try {
-    const blog = await Blog.findById(id);
+    const blog = await Blog.findOne({ slug });
     if (!blog) return res.status(404).json({ error: "Post not found" });
     res.json({ blog });
   } catch (error) {
@@ -39,13 +39,12 @@ router.post("/", verifyToken, async (req, res) => {
   res.status(201).json(blog);
 });
 
-router.put('/:id', verifyToken, async (req, res) => {
-  const { id } = req.params;
-  const { title, content, author, summary, imageUrl } = req.body;
+router.put('/:slug', verifyToken, async (req, res) => {
+  const { title, content, author, summary, imageUrl, slug } = req.body;
 
   try {
-    const blog = await Blog.findByIdAndUpdate(
-      id,
+    const blog = await Blog.findOneAndUpdate(
+      { slug },
       { title, content, author, summary, imageUrl },
       { new: true }
     );
