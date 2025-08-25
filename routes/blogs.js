@@ -33,19 +33,19 @@ router.get("/:slug", async (req, res) => {
 });
 
 router.post("/", verifyToken, async (req, res) => {
-  const { title, content, author, summary, imageUrl } = req.body;
-  const blog = new Blog({ title, content, author, summary, imageUrl });
+  const { title, content, author, summary, imageUrl, links } = req.body;
+  const blog = new Blog({ title, content, author, summary, imageUrl, links });
   await blog.save();
   res.status(201).json(blog);
 });
 
 router.put('/:slug', verifyToken, async (req, res) => {
-  const { title, content, author, summary, imageUrls, slug } = req.body;
+  const { title, content, author, summary, imageUrls, slug, links } = req.body;
 
   try {
     const blog = await Blog.findOneAndUpdate(
       { slug },
-      { title, content, author, summary, imageUrls },
+      { title, content, author, summary, imageUrls, links },
       { new: true }
     );
     if (!blog) return res.status(404).json({ error: "Post not found" });
