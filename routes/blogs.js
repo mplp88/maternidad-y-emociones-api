@@ -40,12 +40,12 @@ router.post("/", verifyToken, async (req, res) => {
 });
 
 router.put('/:slug', verifyToken, async (req, res) => {
-  const { title, content, author, summary, imageUrl, slug } = req.body;
+  const { title, content, author, summary, imageUrls, slug } = req.body;
 
   try {
     const blog = await Blog.findOneAndUpdate(
       { slug },
-      { title, content, author, summary, imageUrl },
+      { title, content, author, summary, imageUrls },
       { new: true }
     );
     if (!blog) return res.status(404).json({ error: "Post not found" });
