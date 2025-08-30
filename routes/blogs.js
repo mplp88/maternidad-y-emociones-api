@@ -78,6 +78,7 @@ router.put("/:slug/comments", async (req, res) => {
     const blog = await Blog.findOne({ slug });
     if (!blog) return res.status(404).json({ ok: false, error: "Post not found" });
 
+    comment.createdAt = Date.now();
     blog.comments.push(comment);
     await blog.save();
 
