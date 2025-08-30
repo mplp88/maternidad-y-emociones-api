@@ -6,6 +6,13 @@ const linkSchema = new Schema({
   facebook: { type: String, required: false },
 });
 
+const commentSchema = new Schema({
+  clientId: { type: String, required: true },
+  author: { type: String, required: true },
+  content: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
+});
+
 const blogSchema = new Schema({
   title: { type: String, required: true },
   content: { type: String, required: true },
@@ -13,10 +20,11 @@ const blogSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
   author: { type: String, required: true },
-  imageUrl: { type: String, required: false },
   imageUrls: { type: [String], required: false },
   slug: { type: String, required: true, unique: true },
   links: { type: linkSchema, required: false },
+  comments: { type: [commentSchema], required: false },
+  likes: { type: [String], required: false },
 });
 
 blogSchema.pre("validate", function (next) {

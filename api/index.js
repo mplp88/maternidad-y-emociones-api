@@ -34,15 +34,6 @@ app.use("/api/image", imageRoutes);
 console.log(process.env.NODE_ENV);
 
 const PORT = process.env.PORT || 3000;
-if (process.env.NODE_ENV === "development") {
-  const httpsOptions = {
-    key: fs.readFileSync("certs/localhost-key.pem"),
-    cert: fs.readFileSync("certs/localhost.pem"),
-  };
 
-  https.createServer(httpsOptions, app).listen(PORT, () => {
-    console.log(`Servidor HTTPS escuchando en puerto ${PORT}`);
-  });
-} else {
-  app.listen(PORT, () => console.log(`Servidor escuchando en puerto ${PORT}`));
-}
+app.listen(PORT, () => console.log(`Servidor escuchando en puerto ${PORT}`));
+
