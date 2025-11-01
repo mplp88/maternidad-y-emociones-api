@@ -8,6 +8,7 @@ import fs from "fs";
 import authRoutes from "../routes/auth.js";
 import blogRoutes from "../routes/blogs.js";
 import imageRoutes from "../routes/image.js";
+import ebookRoutes from "../routes/ebook.js";
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.get("/", (req, res) => {
 app.use("/api/login", authRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/image", imageRoutes);
+app.use("/api/ebooks", ebookRoutes);
 
 console.log(process.env.NODE_ENV);
 
