@@ -35,4 +35,8 @@ console.log(process.env.NODE_ENV);
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => console.log(`Servidor escuchando en puerto ${PORT}`));
+if (process.env.NODE_ENV === 'development') {
+  app.listen(PORT, () => console.log(`Servidor escuchando en puerto ${PORT}`));
+}
+
+export default app;
