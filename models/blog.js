@@ -1,5 +1,5 @@
-import { Schema, model } from "mongoose";
-import slugify from "slugify";
+import { Schema, model } from 'mongoose';
+import slugify from 'slugify';
 
 const linkSchema = new Schema({
   instagram: { type: String, required: false },
@@ -27,11 +27,11 @@ const blogSchema = new Schema({
   likes: { type: [String], required: false },
 });
 
-blogSchema.pre("validate", function (next) {
-  if (this.isModified("title") || this.isNew) {
+blogSchema.pre('validate', function (next) {
+  if (this.isModified('title') || this.isNew) {
     this.slug = slugify(this.title, { lower: true, strict: true });
   }
   next();
 });
 
-export const Blog = model("Blog", blogSchema);
+export const Blog = model('Blog', blogSchema);
