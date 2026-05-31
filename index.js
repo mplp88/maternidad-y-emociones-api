@@ -3,10 +3,10 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 
-import authRoutes from '../routes/auth.js';
-import blogRoutes from '../routes/blogs.js';
-import imageRoutes from '../routes/image.js';
-import ebookRoutes from '../routes/ebook.js';
+import authRoutes from './routes/auth.js';
+import blogRoutes from './routes/blogs.js';
+import imageRoutes from './routes/image.js';
+import ebookRoutes from './routes/ebook.js';
 
 dotenv.config();
 
